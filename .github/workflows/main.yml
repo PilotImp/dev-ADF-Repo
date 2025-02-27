@@ -10,7 +10,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    run: cd $GITHUB_WORKSPACE
+    
     steps:
 
     - uses: actions/checkout@v3
