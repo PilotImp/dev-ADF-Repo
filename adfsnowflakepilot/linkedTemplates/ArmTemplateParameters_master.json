@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfsnowflakepilot"
+		},
+		"AzureBlobStorage_SnowFlake_connectionString": {
+			"value": ""
+		},
+		"Azure_to_snowflake_password": {
+			"value": ""
+		},
+		"Snowflake_Cloud_DB_password": {
+			"value": ""
+		},
+		"Snowflake_LinkedService_password": {
+			"value": ""
+		},
+		"AzureBlobStorage1_sasUri": {
+			"value": ""
+		},
+		"Azure_to_snowflake_properties_typeProperties_server": {
+			"value": "pilotsqlserver.database.windows.net"
+		},
+		"Azure_to_snowflake_properties_typeProperties_database": {
+			"value": "Electric vehicle population"
+		},
+		"Azure_to_snowflake_properties_typeProperties_userName": {
+			"value": "pilotserver"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_database": {
+			"value": "EV_PROJECT"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_role": {
+			"value": "ACCOUNTADMIN"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_database": {
+			"value": "EV_PROJECT"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_role": {
+			"value": "ACCOUNTADMIN"
+		},
+		"SourceApi_LinkedService_properties_typeProperties_url": {
+			"value": "https://data.wa.gov/resource/g2kf-7usg.json"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
