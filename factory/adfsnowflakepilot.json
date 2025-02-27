@@ -1,0 +1,9 @@
+{
+	"name": "adfsnowflakepilot",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ee66067c-5e53-41d2-8578-2a63cafd4171",
+		"tenantId": "db43ad7d-a68d-45d4-9ac0-c41c12fbca0a"
+	}
+}

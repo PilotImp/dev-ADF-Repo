@@ -1,0 +1,54 @@
+{
+	"name": "SnowflakeTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_LinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "COUNTY_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "COUNTY_FIPS_CODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CITY_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CITY_FIPS_CODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CITY_FIPS_CODE_90",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "GNIS_CODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "GNIS_TIGER_FORMAT_CODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PLACE_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "MULTI_COUNTY_FLAG",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "PILOT_STAGE",
+			"table": "COUNTY_CITY_DATA"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

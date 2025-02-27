@@ -1,0 +1,144 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "snowflake",
+						"enableCompression": false
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['county_name']"
+								},
+								"sink": {
+									"name": "COUNTY_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['county_fips_code']"
+								},
+								"sink": {
+									"name": "COUNTY_FIPS_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['city_name']"
+								},
+								"sink": {
+									"name": "CITY_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['city_fips_code']"
+								},
+								"sink": {
+									"name": "CITY_FIPS_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['city_fips_code_90']"
+								},
+								"sink": {
+									"name": "CITY_FIPS_CODE_90",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['gnis_code']"
+								},
+								"sink": {
+									"name": "GNIS_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['gnis_tiger_format_code']"
+								},
+								"sink": {
+									"name": "GNIS_TIGER_FORMAT_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['place_name']"
+								},
+								"sink": {
+									"name": "PLACE_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['multi_county_flag']"
+								},
+								"sink": {
+									"name": "MULTI_COUNTY_FLAG",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "RestResource1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SnowflakeTable1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-02-03T12:01:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

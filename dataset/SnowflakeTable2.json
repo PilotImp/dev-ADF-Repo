@@ -1,0 +1,98 @@
+{
+	"name": "SnowflakeTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Cloud_DB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "VIN",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "COUNTY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CITY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POSTAL_CODE",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "MODEL_YEAR",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "MAKE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "MODEL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ELECTRIC_VEHICLE_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CAFV_ELIGIBILITY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ELECTRIC_RANGE",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "BASE_MSRP",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "LEGISLATIVE_DISTRICT",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "DOL_VEHICLE_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "VEHICLE_LOCATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ELECTRIC_UTILITY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CENSUS_TRACT_2020",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "PILOT_STAGE",
+			"table": "ELECTRIC_VEHICLE_POPULATION_DATA"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

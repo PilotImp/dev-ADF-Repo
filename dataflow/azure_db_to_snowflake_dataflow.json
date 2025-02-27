@@ -1,0 +1,98 @@
+{
+	"name": "azure_db_to_snowflake_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable2",
+						"type": "DatasetReference"
+					},
+					"name": "snowflakedb"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {VIN (1-10)} as string,",
+				"          County as string,",
+				"          City as string,",
+				"          State as string,",
+				"          {Postal Code} as long,",
+				"          {Model Year} as long,",
+				"          Make as string,",
+				"          Model as string,",
+				"          {Electric Vehicle Type} as string,",
+				"          {Clean Alternative Fuel Vehicle (CAFV) Eligibility} as string,",
+				"          {Electric Range} as long,",
+				"          {Base MSRP} as long,",
+				"          {Legislative District} as long,",
+				"          {DOL Vehicle ID} as long,",
+				"          {Vehicle Location} as string,",
+				"          {Electric Utility} as string,",
+				"          {2020 Census Tract} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'NONE',",
+				"     format: 'table') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          VIN as string,",
+				"          COUNTY as string,",
+				"          CITY as string,",
+				"          STATE as string,",
+				"          POSTAL_CODE as string,",
+				"          MODEL_YEAR as string,",
+				"          MAKE as string,",
+				"          MODEL as string,",
+				"          ELECTRIC_VEHICLE_TYPE as string,",
+				"          CAFV_ELIGIBILITY as string,",
+				"          ELECTRIC_RANGE as string,",
+				"          BASE_MSRP as string,",
+				"          LEGISLATIVE_DISTRICT as string,",
+				"          DOL_VEHICLE_ID as string,",
+				"          VEHICLE_LOCATION as string,",
+				"          ELECTRIC_UTILITY as string,",
+				"          CENSUS_TRACT_2020 as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          VIN = {VIN (1-10)},",
+				"          COUNTY = County,",
+				"          CITY = City,",
+				"          STATE = State,",
+				"          POSTAL_CODE = {Postal Code},",
+				"          MODEL_YEAR = {Model Year},",
+				"          MAKE = Make,",
+				"          MODEL = Model,",
+				"          ELECTRIC_VEHICLE_TYPE = {Electric Vehicle Type},",
+				"          CAFV_ELIGIBILITY = {Clean Alternative Fuel Vehicle (CAFV) Eligibility},",
+				"          ELECTRIC_RANGE = {Electric Range},",
+				"          BASE_MSRP = {Base MSRP},",
+				"          LEGISLATIVE_DISTRICT = {Legislative District},",
+				"          DOL_VEHICLE_ID = {DOL Vehicle ID},",
+				"          VEHICLE_LOCATION = {Vehicle Location},",
+				"          ELECTRIC_UTILITY = {Electric Utility},",
+				"          CENSUS_TRACT_2020 = {2020 Census Tract}",
+				"     )) ~> snowflakedb"
+			]
+		}
+	}
+}

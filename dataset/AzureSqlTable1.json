@@ -1,0 +1,92 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azure_to_snowflake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "VIN (1-10)",
+				"type": "varchar"
+			},
+			{
+				"name": "County",
+				"type": "varchar"
+			},
+			{
+				"name": "City",
+				"type": "varchar"
+			},
+			{
+				"name": "State",
+				"type": "varchar"
+			},
+			{
+				"name": "Postal Code",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Model Year",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Make",
+				"type": "varchar"
+			},
+			{
+				"name": "Model",
+				"type": "varchar"
+			},
+			{
+				"name": "Electric Vehicle Type",
+				"type": "varchar"
+			},
+			{
+				"name": "Clean Alternative Fuel Vehicle (CAFV) Eligibility",
+				"type": "varchar"
+			},
+			{
+				"name": "Electric Range",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Base MSRP",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Legislative District",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "DOL Vehicle ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Vehicle Location",
+				"type": "varchar"
+			},
+			{
+				"name": "Electric Utility",
+				"type": "varchar"
+			},
+			{
+				"name": "2020 Census Tract",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Electric_Vehicle_Population_Data"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
