@@ -16,8 +16,12 @@ jobs:
     steps:          
     - uses: actions/checkout@v3
       with:
-        ref: ${{ github.ref_name }}  # Ensure you are on the correct branch
-        path: ${{ github.ref_name }}
+        ref: main  # Checkout the adf_publish branch
+        path: main
+    - uses: actions/checkout@v3
+      with:
+        ref: adf_publish  # Checkout the adf_publish branch
+        path: adf_publish
       
     - name: Debug GitHub Workspace
       run: | 
