@@ -14,6 +14,8 @@ jobs:
     
     steps:    
     - uses: actions/checkout@v3
+    - name: Debug - List directory contents
+        run: ls -R $GITHUB_WORKSPACE  # Lists all files in the workspace
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.4.1
