@@ -14,6 +14,7 @@ jobs:
     
     steps:    
     - uses: actions/checkout@v4
+    - run: ls -R $GITHUB_WORKSPACE
    
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
