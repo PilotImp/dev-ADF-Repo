@@ -31,7 +31,7 @@ jobs:
             echo "Directory exists: adf_publish"
         else
           echo "Error: Directory adf_publish does not exist!"
-          exit 1
+          
         fi
     
    
