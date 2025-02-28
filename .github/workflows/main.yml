@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest    
     
     
-    steps:    
-      shell: bash
+    steps:          
     - uses: actions/checkout@v4
+    - name: Run a bash command
+      run: echo "Hello, world!"
+      shell: bash
     - run: ls -R $GITHUB_WORKSPACE
    
 # Installs Node and the npm packages saved in your package.json file in the build
