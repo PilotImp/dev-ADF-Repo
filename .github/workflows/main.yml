@@ -67,7 +67,7 @@ jobs:
 
     - name: Validate and Generate ARM template
       run: npm run build export ${{github.workspace}}/ /subscriptions/6dce22bf-0177-4a62-8c03-465004d8e0cf/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
-      working-directory: adf_publish
+      working-directory: main
  
 # In order to leverage the artifact in another job, we need to upload it with the upload action 
     - name: upload artifact
