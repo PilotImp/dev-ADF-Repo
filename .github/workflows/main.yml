@@ -2,7 +2,6 @@ on:
   push:
     branches:
     - main
-    - adf_publish
 
 permissions:
       id-token: write
@@ -10,45 +9,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest    
-    
-    
-    steps:          
+    runs-on: ubuntu-latest
+    steps:
+
     - uses: actions/checkout@v3
-      with:
-        ref: main  # Checkout the adf_publish branch
-        path: main
-    - uses: actions/checkout@v3
-      with:
-        ref: adf_publish  # Checkout the adf_publish branch
-        path: adf_publish
-      
-    - name: Debug GitHub Workspace
-      run: | 
-          echo "GitHub Workspace: ${{ github.workspace }}"
-          ls -la ${{ github.workspace }}
-    - name: Run a bash command
-      run: echo "Hello, world!"
-      shell: bash
-    - run: ls -R $GITHUB_WORKSPACE
-    - name: Check if adf_publish exists
-      run: |
-        if [ -d "${{ github.workspace }}/adf_publish" ]; then
-            echo "Directory exists: adf_publish"
-        else
-          echo "Error: Directory adf_publish does not exist!"
-          
-        fi
-    - name: Check if main exists
-      run: |
-        if [ -d "${{ github.workspace }}/main" ]; then
-            echo "Directory exists: main"
-        else
-          echo "Error: Directory main does not exist!"
-          
-        fi
-    
-   
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.4.1
@@ -57,24 +21,24 @@ jobs:
         
     - name: install ADF Utilities package
       run: npm install
-      working-directory: ${{github.workspace}}/main  # (1) provide the folder location of the package.json file
+      working-directory: ${{github.workspace}}/build  # (1) provide the folder location of the package.json file
         
 # Validates all of the Data Factory resources in the repository. You'll get the same validation errors as when "Validate All" is selected.
     - name: Validate
-      run: npm run build validate ${{github.workspace}}/ /subscriptions/6dce22bf-0177-4a62-8c03-465004d8e0cf/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
-      working-directory: main
+      run: npm run build validate ${{github.workspace}}/ /subscriptions/<<yourSubscriptionID>>/resourceGroups/<<yourResourceGroup>>/providers/Microsoft.DataFactory/factories/<<dataFactoryName>> # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
+      working-directory: ${{github.workspace}}/build
  
 
     - name: Validate and Generate ARM template
-      run: npm run build export ${{github.workspace}}/ /subscriptions/6dce22bf-0177-4a62-8c03-465004d8e0cf/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
-      working-directory: main
+      run: npm run build export ${{github.workspace}}/ /subscriptions/<<yourSubscriptionID>>/resourceGroups/<<yourResourceGroup>>/providers/Microsoft.DataFactory/factories/<<dataFactoryName>> "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
+      working-directory: ${{github.workspace}}/build
  
 # In order to leverage the artifact in another job, we need to upload it with the upload action 
     - name: upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ExportedArmTemplate # (4) use the same artifact name you used in the previous export step
-        path: ${{github.workspace}}/adf_publish/ExportedArmTemplate
+        path: ${{github.workspace}}/build/ExportedArmTemplate
 
   release:
     needs: build
@@ -92,7 +56,7 @@ jobs:
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          tenant-id: ${{ secrets.AZURE_TANANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           enable-AzPSSession: true 
 
@@ -103,4 +67,6 @@ jobs:
           dataFactoryName: #targetADF
           armTemplateFile: ARMTemplateForFactory.json
           armTemplateParametersFile: ARMTemplateParametersForFactory.json
-          
+          #additionalParameters: # (10) Parameters which will be replaced in the ARM template. Expected format 'key1=value key2=value keyN=value'. At the minimum here you should provide the target ADF name parameter. Check the ARMTemplateParametersForFactory.json file for all the parameters that are expected in your scenario
+         
+          # skipAzModuleInstallation:  # Parameters which skip the Az module installation. Optional, default is false.      
