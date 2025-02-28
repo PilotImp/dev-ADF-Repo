@@ -14,10 +14,7 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
-      name: List All Files in Repo
-      run: |
-        echo "Checking ADF artifacts..."
-        ls -R ${{ github.workspace }}
+      
       with:
         ref: main  # Checkout the main branch
         path: main
