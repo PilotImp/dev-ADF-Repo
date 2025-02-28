@@ -2,6 +2,7 @@ on:
   push:
     branches:
     - main
+    - adf_publish
 
 permissions:
       id-token: write
@@ -13,6 +14,13 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
+      with:
+        ref: main  # Checkout the adf_publish branch
+        path: main
+    - uses: actions/checkout@v3
+      with:
+        ref: adf_publish  # Checkout the adf_publish branch
+        path: adf_publish
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.4.1
