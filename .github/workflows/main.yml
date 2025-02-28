@@ -23,6 +23,14 @@ jobs:
       run: echo "Hello, world!"
       shell: bash
     - run: ls -R $GITHUB_WORKSPACE
+    - name: Check if adf_publish exists
+      run: |
+        if [ -d "${{ github.workspace }}/adf_publish" ]; then
+            echo "Directory exists: adf_publish"
+        else
+          echo "Error: Directory adf_publish does not exist!"
+          exit 1
+        fi
     
    
 # Installs Node and the npm packages saved in your package.json file in the build
