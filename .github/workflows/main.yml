@@ -47,12 +47,12 @@ jobs:
 # Validates all of the Data Factory resources in the repository. You'll get the same validation errors as when "Validate All" is selected.
     - name: Validate
       run: npm run build validate ${{github.workspace}}/ /subscriptions/6dce22bf-0177-4a62-8c03-465004d8e0cf/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
-      working-directory: ${{github.workspace}}/adf_publish
+      working-directory: adf_publish
  
 
     - name: Validate and Generate ARM template
       run: npm run build export ${{github.workspace}}/ /subscriptions/6dce22bf-0177-4a62-8c03-465004d8e0cf/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
-      working-directory: ${{github.workspace}}/adf_publish
+      working-directory: adf_publish
  
 # In order to leverage the artifact in another job, we need to upload it with the upload action 
     - name: upload artifact
