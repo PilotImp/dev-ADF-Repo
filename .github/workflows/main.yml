@@ -17,6 +17,10 @@ jobs:
       with:
         ref: main  # Checkout the main branch
         path: main
+    - name: Debug GitHub Workspace
+      run: | 
+          echo "GitHub Workspace: ${{ github.workspace }}"
+          ls -la ${{ github.workspace }}
     
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
