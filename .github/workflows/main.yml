@@ -14,7 +14,9 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
-     
+      with:
+        ref: main  # Checkout the main branch
+        path: main
     
 # Installs Node and the npm packages saved in your package.json file in the build
     - name: Setup Node.js environment
