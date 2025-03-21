@@ -1,0 +1,9 @@
+{
+	"name": "snowpilotADF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4d0dae56-956b-4103-aaf5-3f893c8af726",
+		"tenantId": "b76be4f3-0f78-4896-9848-593d1f991ba5"
+	}
+}
