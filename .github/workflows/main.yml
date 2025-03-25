@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ExportedArmTemplate # (4) use the same artifact name you used in the previous export step
-        path: ${{github.workspace}}/main/ExportedArmTemplate
+        path: ${{github.workspace}}/ExportedArmTemplate
 
   release:
     needs: build
