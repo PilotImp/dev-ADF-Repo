@@ -34,12 +34,12 @@ jobs:
         
 # Validates all of the Data Factory resources in the repository. You'll get the same validation errors as when "Validate All" is selected.
     - name: Validate
-      run: npm run build validate ${{github.workspace}}/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
+      run: npm run build validate ${{github.workspace}}/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/snowpilotADF # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
       working-directory: ${{github.workspace}}
  
 
     - name: Validate and Generate ARM template
-      run: npm run build export ${{github.workspace}}/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/adfsnowflakepilot "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
+      run: npm run build export ${{github.workspace}}/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/snowflake_pilot/providers/Microsoft.DataFactory/factories/snowpilotADF "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
       working-directory: ${{github.workspace}}
  
 # In order to leverage the artifact in another job, we need to upload it with the upload action 
@@ -72,8 +72,8 @@ jobs:
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
-          resourceGroupName: #TargetResourceGroup
-          dataFactoryName: #targetADF
+          resourceGroupName: snowflake_pilot
+          dataFactoryName: SnowADFProd
           armTemplateFile: ARMTemplateForFactory.json
           armTemplateParametersFile: ARMTemplateParametersForFactory.json
           #additionalParameters: # (10) Parameters which will be replaced in the ARM template. Expected format 'key1=value key2=value keyN=value'. At the minimum here you should provide the target ADF name parameter. Check the ARMTemplateParametersForFactory.json file for all the parameters that are expected in your scenario
