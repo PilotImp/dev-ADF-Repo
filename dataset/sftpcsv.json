@@ -1,0 +1,23 @@
+{
+	"name": "sftpcsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sftpserver",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"fileName": "county_city_data_staging.csv",
+				"folderPath": "/home/impressico/snowflake_pilot"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "",
+			"firstRowAsHeader": true,
+			"quoteChar": ""
+		},
+		"schema": []
+	}
+}
