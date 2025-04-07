@@ -18,6 +18,43 @@
 			"firstRowAsHeader": true,
 			"quoteChar": ""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "COUNTY_NAME",
+				"type": "String"
+			},
+			{
+				"name": "COUNTY_FIPS_CODE",
+				"type": "String"
+			},
+			{
+				"name": "CITY_NAME",
+				"type": "String"
+			},
+			{
+				"name": "CITY_FIPS_CODE",
+				"type": "String"
+			},
+			{
+				"name": "CITY_FIPS_CODE_90",
+				"type": "String"
+			},
+			{
+				"name": "GNIS_CODE",
+				"type": "String"
+			},
+			{
+				"name": "GNIS_TIGER_FORMAT_CODE",
+				"type": "String"
+			},
+			{
+				"name": "PLACE_NAME",
+				"type": "String"
+			},
+			{
+				"name": "MULTI_COUNTY_FLAG",
+				"type": "String"
+			}
+		]
 	}
 }
