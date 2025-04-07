@@ -1,0 +1,173 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "sfpt-snowflake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "SftpReadSettings",
+							"recursive": true,
+							"modifiedDatetimeStart": "2025-04-07T00:00:00.000Z",
+							"modifiedDatetimeEnd": "2025-04-08T00:00:00.000Z",
+							"enablePartitionDiscovery": false,
+							"disableChunking": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "COUNTY_NAME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "COUNTY_NAME",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "COUNTY_FIPS_CODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "COUNTY_FIPS_CODE",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "CITY_NAME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CITY_NAME",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "CITY_FIPS_CODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CITY_FIPS_CODE",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "CITY_FIPS_CODE_90",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CITY_FIPS_CODE_90",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "GNIS_CODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GNIS_CODE",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "GNIS_TIGER_FORMAT_CODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GNIS_TIGER_FORMAT_CODE",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "PLACE_NAME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PLACE_NAME",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							},
+							{
+								"source": {
+									"name": "MULTI_COUNTY_FLAG",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MULTI_COUNTY_FLAG",
+									"type": "String",
+									"physicalType": "VARCHAR"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sftpcsv",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
