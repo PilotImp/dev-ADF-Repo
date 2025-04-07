@@ -1,0 +1,161 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "snowpilotADF"
+		},
+		"AzureBlobStorage_SnowFlake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_SnowFlake'"
+		},
+		"Azure_to_snowflake_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Azure_to_snowflake'"
+		},
+		"Sftpserver_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Sftpserver'"
+		},
+		"Snowflake1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Snowflake1'"
+		},
+		"Snowflake_Cloud_DB_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Snowflake_Cloud_DB'"
+		},
+		"Snowflake_LinkedService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Snowflake_LinkedService'"
+		},
+		"AzureBlobStorage1_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'AzureBlobStorage1'"
+		},
+		"Azure_to_snowflake_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pilotsqlserver.database.windows.net"
+		},
+		"Azure_to_snowflake_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Electric vehicle population"
+		},
+		"Azure_to_snowflake_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "pilotserver"
+		},
+		"Sftpserver_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "172.20.22.40"
+		},
+		"Sftpserver_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "impressico"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "EV_PROJECT"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "ACCOUNTADMIN"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "EV_PROJECT"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "ACCOUNTADMIN"
+		},
+		"SourceApi_LinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://data.wa.gov/resource/g2kf-7usg.json"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "snowpilotADF_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage_SnowFlake_connectionString": {
+						"value": "[parameters('AzureBlobStorage_SnowFlake_connectionString')]"
+					},
+					"Azure_to_snowflake_password": {
+						"value": "[parameters('Azure_to_snowflake_password')]"
+					},
+					"Snowflake1_connectionString": {
+						"value": "[parameters('Snowflake1_connectionString')]"
+					},
+					"Snowflake_Cloud_DB_password": {
+						"value": "[parameters('Snowflake_Cloud_DB_password')]"
+					},
+					"Snowflake_LinkedService_password": {
+						"value": "[parameters('Snowflake_LinkedService_password')]"
+					},
+					"Sftpserver_password": {
+						"value": "[parameters('Sftpserver_password')]"
+					},
+					"AzureBlobStorage1_sasUri": {
+						"value": "[parameters('AzureBlobStorage1_sasUri')]"
+					},
+					"Azure_to_snowflake_properties_typeProperties_server": {
+						"value": "[parameters('Azure_to_snowflake_properties_typeProperties_server')]"
+					},
+					"Azure_to_snowflake_properties_typeProperties_database": {
+						"value": "[parameters('Azure_to_snowflake_properties_typeProperties_database')]"
+					},
+					"Azure_to_snowflake_properties_typeProperties_userName": {
+						"value": "[parameters('Azure_to_snowflake_properties_typeProperties_userName')]"
+					},
+					"Snowflake_Cloud_DB_properties_typeProperties_database": {
+						"value": "[parameters('Snowflake_Cloud_DB_properties_typeProperties_database')]"
+					},
+					"Snowflake_Cloud_DB_properties_typeProperties_role": {
+						"value": "[parameters('Snowflake_Cloud_DB_properties_typeProperties_role')]"
+					},
+					"Snowflake_LinkedService_properties_typeProperties_database": {
+						"value": "[parameters('Snowflake_LinkedService_properties_typeProperties_database')]"
+					},
+					"Snowflake_LinkedService_properties_typeProperties_role": {
+						"value": "[parameters('Snowflake_LinkedService_properties_typeProperties_role')]"
+					},
+					"SourceApi_LinkedService_properties_typeProperties_url": {
+						"value": "[parameters('SourceApi_LinkedService_properties_typeProperties_url')]"
+					},
+					"Sftpserver_properties_typeProperties_host": {
+						"value": "[parameters('Sftpserver_properties_typeProperties_host')]"
+					},
+					"Sftpserver_properties_typeProperties_userName": {
+						"value": "[parameters('Sftpserver_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

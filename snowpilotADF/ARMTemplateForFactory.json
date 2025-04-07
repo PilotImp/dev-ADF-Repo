@@ -1,0 +1,911 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "snowpilotADF"
+		},
+		"AzureBlobStorage_SnowFlake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_SnowFlake'"
+		},
+		"Azure_to_snowflake_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Azure_to_snowflake'"
+		},
+		"Sftpserver_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Sftpserver'"
+		},
+		"Snowflake1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Snowflake1'"
+		},
+		"Snowflake_Cloud_DB_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Snowflake_Cloud_DB'"
+		},
+		"Snowflake_LinkedService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Snowflake_LinkedService'"
+		},
+		"AzureBlobStorage1_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'AzureBlobStorage1'"
+		},
+		"Azure_to_snowflake_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pilotsqlserver.database.windows.net"
+		},
+		"Azure_to_snowflake_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Electric vehicle population"
+		},
+		"Azure_to_snowflake_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "pilotserver"
+		},
+		"Sftpserver_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "172.20.22.40"
+		},
+		"Sftpserver_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "impressico"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "EV_PROJECT"
+		},
+		"Snowflake_Cloud_DB_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "ACCOUNTADMIN"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "EV_PROJECT"
+		},
+		"Snowflake_LinkedService_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "ACCOUNTADMIN"
+		},
+		"SourceApi_LinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://data.wa.gov/resource/g2kf-7usg.json"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/azure_db_to_snowflake')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "azure_db_to_snowflake_dataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "azure_db_to_snowflake_dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"snowflakedb": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-02-04T12:53:53Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/azure_db_to_snowflake_dataflow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET"
+							},
+							"sink": {
+								"type": "SnowflakeV2Sink",
+								"importSettings": {
+									"type": "SnowflakeImportCopyCommand"
+								}
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"path": "snowflake",
+								"enableCompression": false
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['county_name']"
+										},
+										"sink": {
+											"name": "COUNTY_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['county_fips_code']"
+										},
+										"sink": {
+											"name": "COUNTY_FIPS_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['city_name']"
+										},
+										"sink": {
+											"name": "CITY_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['city_fips_code']"
+										},
+										"sink": {
+											"name": "CITY_FIPS_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['city_fips_code_90']"
+										},
+										"sink": {
+											"name": "CITY_FIPS_CODE_90",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['gnis_code']"
+										},
+										"sink": {
+											"name": "GNIS_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['gnis_tiger_format_code']"
+										},
+										"sink": {
+											"name": "GNIS_TIGER_FORMAT_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['place_name']"
+										},
+										"sink": {
+											"name": "PLACE_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['multi_county_flag']"
+										},
+										"sink": {
+											"name": "MULTI_COUNTY_FLAG",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "RestResource1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SnowflakeTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-02-03T12:01:56Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/RestResource1')]",
+				"[concat(variables('factoryId'), '/datasets/SnowflakeTable1')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelinetest-CICD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure_to_snowflake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "VIN (1-10)",
+						"type": "varchar"
+					},
+					{
+						"name": "County",
+						"type": "varchar"
+					},
+					{
+						"name": "City",
+						"type": "varchar"
+					},
+					{
+						"name": "State",
+						"type": "varchar"
+					},
+					{
+						"name": "Postal Code",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Model Year",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Make",
+						"type": "varchar"
+					},
+					{
+						"name": "Model",
+						"type": "varchar"
+					},
+					{
+						"name": "Electric Vehicle Type",
+						"type": "varchar"
+					},
+					{
+						"name": "Clean Alternative Fuel Vehicle (CAFV) Eligibility",
+						"type": "varchar"
+					},
+					{
+						"name": "Electric Range",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Base MSRP",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Legislative District",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "DOL Vehicle ID",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Vehicle Location",
+						"type": "varchar"
+					},
+					{
+						"name": "Electric Utility",
+						"type": "varchar"
+					},
+					{
+						"name": "2020 Census Tract",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Electric_Vehicle_Population_Data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure_to_snowflake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RestResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SourceApi_LinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SourceApi_LinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake_LinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "COUNTY_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "COUNTY_FIPS_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CITY_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CITY_FIPS_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CITY_FIPS_CODE_90",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "GNIS_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "GNIS_TIGER_FORMAT_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "PLACE_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "MULTI_COUNTY_FLAG",
+						"type": "VARCHAR"
+					}
+				],
+				"typeProperties": {
+					"schema": "PILOT_STAGE",
+					"table": "COUNTY_CITY_DATA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake_LinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake_Cloud_DB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "VIN",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "COUNTY",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CITY",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "STATE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "POSTAL_CODE",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "MODEL_YEAR",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "MAKE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "MODEL",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ELECTRIC_VEHICLE_TYPE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CAFV_ELIGIBILITY",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ELECTRIC_RANGE",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "BASE_MSRP",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "LEGISLATIVE_DISTRICT",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "DOL_VEHICLE_ID",
+						"type": "NUMBER",
+						"precision": 38,
+						"scale": 0
+					},
+					{
+						"name": "VEHICLE_LOCATION",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ELECTRIC_UTILITY",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "CENSUS_TRACT_2020",
+						"type": "VARCHAR"
+					}
+				],
+				"typeProperties": {
+					"schema": "PILOT_STAGE",
+					"table": "ELECTRIC_VEHICLE_POPULATION_DATA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake_Cloud_DB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sftpcsv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Sftpserver",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "SftpLocation",
+						"fileName": "county_city_data_staging.csv",
+						"folderPath": "/home/impressico/snowflake_pilot"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "COUNTY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "COUNTY_FIPS_CODE",
+						"type": "String"
+					},
+					{
+						"name": "CITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CITY_FIPS_CODE",
+						"type": "String"
+					},
+					{
+						"name": "CITY_FIPS_CODE_90",
+						"type": "String"
+					},
+					{
+						"name": "GNIS_CODE",
+						"type": "String"
+					},
+					{
+						"name": "GNIS_TIGER_FORMAT_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PLACE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "MULTI_COUNTY_FLAG",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Sftpserver')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"sasUri": "[parameters('AzureBlobStorage1_sasUri')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage_SnowFlake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage_SnowFlake_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Azure_to_snowflake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('Azure_to_snowflake_properties_typeProperties_server')]",
+					"database": "[parameters('Azure_to_snowflake_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('Azure_to_snowflake_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Azure_to_snowflake_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sftpserver')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Sftp",
+				"typeProperties": {
+					"host": "[parameters('Sftpserver_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('Sftpserver_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Sftpserver_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntimeSFTP",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntimeSFTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Snowflake1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Snowflake",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"connectionString": "[parameters('Snowflake1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Snowflake_Cloud_DB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "to snowflake from cloud database",
+				"annotations": [],
+				"type": "SnowflakeV2",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"accountIdentifier": "nwbxdit-ib73189",
+					"user": "Pilotproject01",
+					"database": "[parameters('Snowflake_Cloud_DB_properties_typeProperties_database')]",
+					"warehouse": "SANDBOX_WH",
+					"role": "[parameters('Snowflake_Cloud_DB_properties_typeProperties_role')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Snowflake_Cloud_DB_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Snowflake_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SnowflakeV2",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"accountIdentifier": "cp75630.central-india.azure",
+					"user": "Pilotproject01",
+					"database": "[parameters('Snowflake_LinkedService_properties_typeProperties_database')]",
+					"warehouse": "COMPUTE_WH",
+					"role": "[parameters('Snowflake_LinkedService_properties_typeProperties_role')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Snowflake_LinkedService_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceApi_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('SourceApi_LinkedService_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntimeSFTP')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azure_db_to_snowflake_dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SnowflakeTable2",
+								"type": "DatasetReference"
+							},
+							"name": "snowflakedb"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          {VIN (1-10)} as string,",
+						"          County as string,",
+						"          City as string,",
+						"          State as string,",
+						"          {Postal Code} as long,",
+						"          {Model Year} as long,",
+						"          Make as string,",
+						"          Model as string,",
+						"          {Electric Vehicle Type} as string,",
+						"          {Clean Alternative Fuel Vehicle (CAFV) Eligibility} as string,",
+						"          {Electric Range} as long,",
+						"          {Base MSRP} as long,",
+						"          {Legislative District} as long,",
+						"          {DOL Vehicle ID} as long,",
+						"          {Vehicle Location} as string,",
+						"          {Electric Utility} as string,",
+						"          {2020 Census Tract} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'NONE',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          VIN as string,",
+						"          COUNTY as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          POSTAL_CODE as decimal(38,0),",
+						"          MODEL_YEAR as decimal(38,0),",
+						"          MAKE as string,",
+						"          MODEL as string,",
+						"          ELECTRIC_VEHICLE_TYPE as string,",
+						"          CAFV_ELIGIBILITY as string,",
+						"          ELECTRIC_RANGE as decimal(38,0),",
+						"          BASE_MSRP as decimal(38,0),",
+						"          LEGISLATIVE_DISTRICT as decimal(38,0),",
+						"          DOL_VEHICLE_ID as decimal(38,0),",
+						"          VEHICLE_LOCATION as string,",
+						"          ELECTRIC_UTILITY as string,",
+						"          CENSUS_TRACT_2020 as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     stageInsert: true,",
+						"     mapColumn(",
+						"          VIN = {VIN (1-10)},",
+						"          COUNTY = County,",
+						"          CITY = City,",
+						"          STATE = State,",
+						"          POSTAL_CODE = {Postal Code},",
+						"          MODEL_YEAR = {Model Year},",
+						"          MAKE = Make,",
+						"          MODEL = Model,",
+						"          ELECTRIC_VEHICLE_TYPE = {Electric Vehicle Type},",
+						"          CAFV_ELIGIBILITY = {Clean Alternative Fuel Vehicle (CAFV) Eligibility},",
+						"          ELECTRIC_RANGE = {Electric Range},",
+						"          BASE_MSRP = {Base MSRP},",
+						"          LEGISLATIVE_DISTRICT = {Legislative District},",
+						"          DOL_VEHICLE_ID = {DOL Vehicle ID},",
+						"          VEHICLE_LOCATION = {Vehicle Location},",
+						"          ELECTRIC_UTILITY = {Electric Utility},",
+						"          CENSUS_TRACT_2020 = {2020 Census Tract}",
+						"     )) ~> snowflakedb"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+				"[concat(variables('factoryId'), '/datasets/SnowflakeTable2')]"
+			]
+		}
+	]
+}
