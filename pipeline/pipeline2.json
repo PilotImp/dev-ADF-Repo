@@ -30,128 +30,113 @@
 						}
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
 					},
 					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "pilotblob"
+					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
 									"name": "COUNTY_NAME",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "COUNTY_NAME",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "COUNTY_FIPS_CODE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "COUNTY_FIPS_CODE",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "CITY_NAME",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "CITY_NAME",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "CITY_FIPS_CODE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "CITY_FIPS_CODE",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "CITY_FIPS_CODE_90",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "CITY_FIPS_CODE_90",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "GNIS_CODE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "GNIS_CODE",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "GNIS_TIGER_FORMAT_CODE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "GNIS_TIGER_FORMAT_CODE",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "PLACE_NAME",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "PLACE_NAME",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "MULTI_COUNTY_FLAG",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "MULTI_COUNTY_FLAG",
-									"type": "String",
-									"physicalType": "VARCHAR"
+									"type": "String"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
 				"inputs": [
@@ -162,7 +147,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "SnowflakeTable1",
 						"type": "DatasetReference"
 					}
 				]
